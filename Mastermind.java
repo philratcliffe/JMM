@@ -8,7 +8,10 @@ public class Mastermind
 {
     public static void main(String args[])
     {
-        System.out.println("Mastermind");
+        TextUserInterface tui = new TextUserInterface();
+        tui.displayWelcome();
+        Game game = new Game(tui, 4);
+        game.play();
 
     }
 

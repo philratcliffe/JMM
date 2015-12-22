@@ -1,31 +1,41 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Game
 {
 
-    private int width;      // The width of the code and guess
-    private Colour code[];  // Holds the code the user tries to guess
+    final int MAX_GUESSES = 12; // Max number of guesses allowed per game
+    private int width;          // The width of the code and guess
+    private List<Colour> code;  // Holds the code the user tries to guess
+    private UserInterface ui;   // The object to interact with the UI
 
-    public Game(int width)
+    public Game(UserInterface ui, int width)
     {
         this.width = width;
-
+        this.ui = ui;
     }
 
-    Colour[] generateCode()
+    public void play()
+    {
+        code = generateCode();
+        List<Colour> guess = ui.getGuess();
+        ui.displayCode(code);
+        ui.displayGuess(guess);
+    }
+
+    private List<Colour> generateCode()
     {
         int numColours = Colour.values().length;
-        Colour[] colours = new Colour[this.width];
+        List<Colour> colours = new ArrayList<>();
 
         Random rnd = new Random();
 
-        // Iterate through 'colours' and populate array with randomised values
+        // Populate array with random colours
         for(int i = 0; i < this.width; i++)
-            colours[i] = Colour.values()[rnd.nextInt(numColours)];
+            colours.add(Colour.values()[rnd.nextInt(numColours)]);
 
         return colours;
-
-
     }
 
     /**
