@@ -11,4 +11,6 @@ public interface UserInterface {
     List<Colour> getGuess();
     void displayCode(List<Colour> code);
     void displayGuess(List<Colour> code);
+    void displayIndicatorCode(List<IndicatorCode> indicator);
+    void displayBoard(Board board);
 }

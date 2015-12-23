@@ -1,10 +1,12 @@
 
 public enum Colour
 {
-    RED,
-    BLUE,
-    YELLOW,
-    GREEN,
-    PURPLE,
-    ORANGE
+    R,
+    B,
+    Y,
+    G,
+    P,
+    O,
+    X,  // Invalid - used when calculating indicators
+    Z   // Invalid - used when calculating indicators
 }

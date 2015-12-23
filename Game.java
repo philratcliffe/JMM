@@ -5,23 +5,34 @@ import java.util.Random;
 public class Game
 {
 
-    final int MAX_GUESSES = 12; // Max number of guesses allowed per game
     private int width;          // The width of the code and guess
     private List<Colour> code;  // Holds the code the user tries to guess
     private UserInterface ui;   // The object to interact with the UI
+    private Board board;
 
     public Game(UserInterface ui, int width)
     {
         this.width = width;
         this.ui = ui;
+        board = new Board();
     }
 
     public void play()
     {
         code = generateCode();
-        List<Colour> guess = ui.getGuess();
-        ui.displayCode(code);
-        ui.displayGuess(guess);
+
+        boolean gameFinished  = false;
+        while(!gameFinished  )
+        {
+            ui.displayBoard(board);
+            List<Colour> guess = ui.getGuess();
+            List<IndicatorCode> indicator = Indicators.getIndicatorCode(code, guess);
+            Row row = new Row(guess, indicator);
+            board.addRow(row);
+            if (board.getRowCount() >= Constants.MAX_GUESSES)
+                gameFinished = true;
+        }
+
     }
 
     private List<Colour> generateCode()

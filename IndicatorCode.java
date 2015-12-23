@@ -1,6 +1,6 @@
 public enum IndicatorCode
 {
-    MISS,
-    NEAR,
-    HIT,
+    X,
+    W,
+    B,
 }
