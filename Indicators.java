@@ -28,7 +28,7 @@ public class Indicators
         {
             if (localGuess.get(i) == localCode.get(i))
             {
-                indicators.add(IndicatorCode.B);
+                indicators.add(IndicatorCode.b);
 
                 // Mark any exact matches in guess and code as used
                 // so that we don't count them again.
@@ -42,14 +42,13 @@ public class Indicators
         {
             Colour c = localGuess.get(0);
             if (localCode.contains(c))
-                indicators.add(IndicatorCode.W);
+                indicators.add(IndicatorCode.w);
                 localCode.remove(c);
             localGuess.remove(c);
 
-        } 
+        }
 
         return indicators;
-
     }
 }
 

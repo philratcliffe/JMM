@@ -10,7 +10,9 @@ public class Mastermind
     {
         TextUserInterface tui = new TextUserInterface();
         tui.displayWelcome();
-        Game game = new Game(tui, 4);
+        int width = tui.getNumPegs();
+        Board board = new Board(width);
+        Game game = new Game(tui, board);
         game.play();
 
     }

@@ -1,6 +1,6 @@
 public enum IndicatorCode
 {
-    X,
-    W,
-    B,
+    x,
+    w,
+    b,
 }
