@@ -28,6 +28,7 @@ public class TextUserInterface implements UserInterface
         displayBanner();
         for (int i = 0; i < 4; i++)
             System.out.println();
+            System.out.println("Only enter the first letter of the colour.");
     }
 
     private void displayBanner()
@@ -61,12 +62,12 @@ public class TextUserInterface implements UserInterface
 
     public void displayYouLose()
     {
-        System.out.println("You my friend are a Loser!");
+        System.out.println("You, my friend, are a loser!");
     }
 
     public void displayYouWin()
     {
-        System.out.println("You Win!");
+        System.out.println("YOU WIN!");
     }
 
     public void displayGuess(List<Colour> guess)
@@ -88,7 +89,7 @@ public class TextUserInterface implements UserInterface
 
     public void displayBoard(Board board)
     {
-        displayWelcome();
+        displayBanner();
         List<Row> rows = board.getRows();
         for (Row row : rows)
         {
@@ -132,7 +133,7 @@ public class TextUserInterface implements UserInterface
             }
             System.out.println();
         }
-        System.out.println("\nYou have " + unusedCount + " guesses remaining.");
+        System.out.println("\nYou have " + unusedCount + " guesses left.");
     }
 
 
@@ -164,7 +165,7 @@ public class TextUserInterface implements UserInterface
         boolean gotValidGuess = false;
         while(!gotValidGuess)
         {
-            guess = console.readLine("guess: ");
+            guess = console.readLine("Guess: ");
             if (guess.matches(regex_for_letters))
                 gotValidGuess = true;
             else
