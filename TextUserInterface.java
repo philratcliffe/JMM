@@ -28,7 +28,10 @@ public class TextUserInterface implements UserInterface
         displayBanner();
         for (int i = 0; i < 4; i++)
             System.out.println();
-            System.out.println("Only enter the first letter of the colour.");
+            System.out.println("Welcome to Mastermind.\n");
+            System.out.println("When choosing a colour, only enter the first " +
+                    "letter of the colour. For example, R for Red, \n" + 
+                    "B for Blue, O for Orange etc.\n");
     }
 
     private void displayBanner()
@@ -60,14 +63,14 @@ public class TextUserInterface implements UserInterface
     }
 
 
-    public void displayYouLose()
+    public void displayYouLose(String name)
     {
-        System.out.println("You, my friend, are a loser!");
+        System.out.println("You, " + name + " are a loser!");
     }
 
-    public void displayYouWin()
+    public void displayYouWin(String name)
     {
-        System.out.println("YOU WIN!");
+        System.out.println("Well done " + name + " YOU WIN!");
     }
 
     public void displayGuess(List<Colour> guess)
@@ -136,6 +139,27 @@ public class TextUserInterface implements UserInterface
         System.out.println("\nYou have " + unusedCount + " guesses left.");
     }
 
+    public int getGameType()
+    {
+        System.out.println("\nSelect the type of game you wish to play.");
+        System.out.println();
+        System.out.println("\t1. Human vs Human");
+        System.out.println("\t2. Human vs Computer");
+        System.out.println("\t3. Computer vs Computer");
+        System.out.println();
+
+        int gameType = -1;
+        boolean validInput = false;
+        while (!validInput)
+        {
+            gameType = Integer.parseInt(console.readLine("Choice: "));
+            if (gameType < 1 || gameType > 3)
+                System.out.println("That's not an option I recognise.");
+            else
+                validInput = true;
+        }
+        return gameType;
+    }
 
     public int getNumPegs()
     {
@@ -145,31 +169,33 @@ public class TextUserInterface implements UserInterface
         while(!gotValidInput)
         {
             codeLength = 
-                    Integer.parseInt(console.readLine("code length(3-8): "));
+                    Integer.parseInt(console.readLine("What length of code would" +
+                                " you like to play with(3-8): "));
             if (codeLength >= Constants.MIN_CODE_LENGTH  
                     && codeLength <= Constants.MAX_CODE_LENGTH)
                 gotValidInput = true;
             else
-                System.out.println("Invalid length. Should be in 3-8");
+                System.out.println("I don't understand that. Expecting a number between 3 and 8");
         }
 
         return codeLength;
     }
 
-    public List<Colour> getGuess(int letterCount)
+
+    public List<Colour> getGuessOrCode(String prompt, int letterCount)
     {
         String regex_for_letters = String.format("[RBYGPO]{%d}", letterCount);
         String guess = "";
 
 
-        boolean gotValidGuess = false;
-        while(!gotValidGuess)
+        boolean gotValidInput = false;
+        while(!gotValidInput)
         {
-            guess = console.readLine("Guess: ");
+            guess = console.readLine(prompt);
             if (guess.matches(regex_for_letters))
-                gotValidGuess = true;
+                gotValidInput = true;
             else
-                System.out.println("Invalid guess");
+                System.out.println("That's not something I recognise.");
         }
 
         int numColours = Colour.values().length;
@@ -181,6 +207,5 @@ public class TextUserInterface implements UserInterface
 
         return colours;
     }
-
 
 }

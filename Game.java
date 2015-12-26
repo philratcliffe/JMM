@@ -5,69 +5,49 @@ import java.util.Random;
 public class Game
 {
 
-    private List<Colour> code;  // Holds the code the user tries to guess
     private UserInterface ui;   // The object to interact with the UI
     private Board board;
+    private String player2;
+    private int gameType;
 
-    public Game(UserInterface ui, Board board)
+    public Game(UserInterface ui, Board board, String player2, int gameType)
     {
         this.ui = ui;
         this.board = board;
+        this.player2 = player2;
+        this.gameType = gameType;
     }
 
     public void play()
     {
-        code = generateCode();
-
         boolean gameFinished  = false;
         while(!gameFinished  )
         {
             ui.displayBoard(this.board);
-            List<Colour> guess = ui.getGuess(this.board.getWidth());
-            List<IndicatorCode> indicator = Indicators.getIndicatorCode(this.code, guess);
+            List<Colour> guess;
+            if (this.gameType == 3)
+                guess = CodeGenerator.generateCode(this.board.getWidth());
+            else
+                guess = ui.getGuessOrCode("Guess: ", this.board.getWidth());
+
+            List<IndicatorCode> indicator = Indicators.getIndicatorCode(
+                    this.board.getCode(), guess);
             Row row = new Row(guess, indicator);
             board.addRow(row);
             if (board.getRowCount() >= Constants.MAX_GUESSES)
             {
                 ui.displayBoard(board);
-                ui.displayYouLose();
-                ui.displayCode(code);
+                ui.displayYouLose(this.player2);
+                ui.displayCode(this.board.getCode());
                 gameFinished = true;
             }
-            if (guess.equals(code))
+            if (guess.equals(this.board.getCode()))
             {
                 ui.displayBoard(board);
-                ui.displayYouWin();
-                ui.displayCode(code);
+                ui.displayYouWin(this.player2);
+                ui.displayCode(this.board.getCode());
                 gameFinished = true;
             }
         }
-
-    }
-
-
-    private List<Colour> generateCode()
-    {
-        int numColours = Colour.values().length;
-        List<Colour> code = new ArrayList<>();
-
-        Random rnd = new Random();
-
-        // Populate array with random colours
-        for(int i = 0; i < this.board.getWidth(); i++)
-        {
-            Colour colour = Colour.X; // Initialise to stop compiler warnings
-
-            boolean foundValidColour = false;
-            while (!foundValidColour)
-            {
-                colour = Colour.values()[rnd.nextInt(numColours)];
-                if (colour != Colour.X && colour != Colour.Z)
-                    foundValidColour = true;
-            }
-            code.add(colour);
-
-        }
-        return code;
     }
 }
