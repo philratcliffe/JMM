@@ -20,18 +20,22 @@ public class Game
 
     public void play()
     {
-        boolean gameFinished  = false;
+        CodeGenerator cg = new CodeGenerator(this.board.getWidth());
+        boolean gameFinished = false;
         while(!gameFinished  )
         {
             ui.displayBoard(this.board);
             List<Colour> guess;
             if (this.gameType == 3)
-                guess = CodeGenerator.generateCode(this.board.getWidth());
+                guess = cg.generateCode();
             else
                 guess = ui.getGuessOrCode("Guess: ", this.board.getWidth());
 
             List<IndicatorCode> indicator = Indicators.getIndicatorCode(
                     this.board.getCode(), guess);
+            if (this.gameType == 3)
+                cg.processIndicator(indicator);
+
             Row row = new Row(guess, indicator);
             board.addRow(row);
             if (board.getRowCount() >= Constants.MAX_GUESSES)

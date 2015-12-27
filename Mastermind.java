@@ -14,14 +14,16 @@ public class Mastermind
     public static void main(String args[])
     {
         TextUserInterface tui = new TextUserInterface();
-
         tui.displayWelcome();
+        int width = tui.getNumPegs();
+
+        CodeGenerator cg = new CodeGenerator(width);
+
 
         String player1 = "Player1";
         String player2 = "Player2";
 
-        int width = tui.getNumPegs();
-        List<Colour> code = CodeGenerator.generateCode(width);
+        List<Colour> code = cg.generateRandomCode();
 
         int gameType = tui.getGameType();
         switch (gameType)
@@ -40,6 +42,5 @@ public class Mastermind
         game.play();
 
     }
-    
 
 }
