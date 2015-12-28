@@ -7,7 +7,6 @@ public class Indicators
     public static List<IndicatorCode> getIndicatorCode(List<Colour> code, List<Colour> guess)
     {
 
-
         // Should never be any null arguments 
         assert(code != null && guess != null);
 
@@ -16,7 +15,7 @@ public class Indicators
 
         // If code or guess are the wrong length something has gone wrong
         assert(code.size() <= Constants.MAX_CODE_LENGTH);
-        assert(code.size() <= Constants.MIN_CODE_LENGTH);
+        assert(code.size() >= Constants.MIN_CODE_LENGTH);
 
         List<Colour> localCode = new ArrayList<Colour>(code);
         List<Colour> localGuess = new ArrayList<Colour>(guess);
