@@ -168,14 +168,21 @@ public class TextUserInterface implements UserInterface
         boolean gotValidInput = false;
         while(!gotValidInput)
         {
-            codeLength = 
-                    Integer.parseInt(console.readLine("What length of code would" +
-                                " you like to play with(3-8): "));
-            if (codeLength >= Constants.MIN_CODE_LENGTH  
-                    && codeLength <= Constants.MAX_CODE_LENGTH)
-                gotValidInput = true;
-            else
-                System.out.println("I don't understand that. Expecting a number between 3 and 8");
+            try
+            {
+                codeLength = 
+                        Integer.parseInt(console.readLine("What length of code would" +
+                                    " you like to play with(3-8): "));
+                if (codeLength >= Constants.MIN_CODE_LENGTH  
+                        && codeLength <= Constants.MAX_CODE_LENGTH)
+                    gotValidInput = true;
+                else
+                    System.out.println("I don't understand that. Expecting a number between 3 and 8");
+            }
+            catch (NumberFormatException e)
+            {
+                System.out.println("I don't understand this.");
+            }
         }
 
         return codeLength;

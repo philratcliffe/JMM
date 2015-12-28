@@ -34,7 +34,9 @@ public class Game
             List<IndicatorCode> indicator = Indicators.getIndicatorCode(
                     this.board.getCode(), guess);
             if (this.gameType == 3)
+            {
                 cg.processIndicator(indicator);
+            }
 
             Row row = new Row(guess, indicator);
             board.addRow(row);
