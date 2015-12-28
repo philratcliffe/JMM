@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Collections;
 
 class CodeGenerator
 {
@@ -29,6 +30,18 @@ class CodeGenerator
         // by the Indicator algorithm
         eliminatedColours.add(Colour.X);
         eliminatedColours.add(Colour.Z);
+    }
+
+    private boolean isSingleColourCode(List<Colour> code)
+    {
+        assert(code.size() == this.width);
+
+        for (int i = 0; i < code.size() - 1; i++)
+        {
+            if (code.get(i) != code.get(i+1))
+                return false;
+        }
+        return true;
     }
 
     private List<Colour> getSingleColourCode(Colour c)
@@ -74,6 +87,12 @@ class CodeGenerator
         return colour;
     }
 
+    private void shuffleArrayList(List<Colour> list)
+    {
+        long seed = System.nanoTime();
+        Collections.shuffle(list, new Random(seed));
+    }
+
     public List<Colour> generateCode()
     {
         System.out.println("coloursToTry: " + this.coloursToTry);
@@ -83,22 +102,33 @@ class CodeGenerator
         List<Colour> code = new ArrayList<>();
 
         Random rnd = new Random();
+        for (int i = 0; i < definateColours.size(); i++)
+        {
+            code.add(definateColours.get(i));
+        }
 
-        // Populate with random colours
-        while(localColoursToTry.size() != 0)
+        while(localColoursToTry.size() != 0 && code.size() <  this.width)
         {
             Colour colour = Colour.X; // Initialise to stop compiler warnings
 
             int index = rnd.nextInt(localColoursToTry.size());
             colour = localColoursToTry.remove(index);
             if (!eliminatedColours.contains(colour))
+            {
+                assert(code.size() < this.width);
                 code.add(colour);
+            }
+
         }
         while (code.size() < width)
         {
             Colour c = getRandomColour();
             code.add(c);
         }
+
+        System.out.println("before shuff: " + code);
+        shuffleArrayList(code);
+        System.out.println("after shuff: " + code);
         this.lastGuess = code;
 
         this.guessedCodes.add(code);
@@ -109,6 +139,7 @@ class CodeGenerator
 
     public void processIndicator(List<IndicatorCode> indicator)
     {
+        assert(definateColours.size() <= this.width);
         assert(indicator.size() <= this.width);
         assert(this.lastGuess.size() == this.width);
 
@@ -122,6 +153,16 @@ class CodeGenerator
                 if (!eliminatedColours.contains(c))
                     this.eliminatedColours.add(c);
             }
+            return;
+        }
+
+        if (isSingleColourCode(this.lastGuess))
+        {
+            if (!this.definateColours.contains(lastGuess.get(0)))
+                this.definateColours.add(lastGuess.get(0));
+
+            System.out.println("lastGuess: " + lastGuess);
+            System.out.println("def: " + definateColours);
         }
 
         List<Colour> localLastGuess = new ArrayList<Colour>(lastGuess);
