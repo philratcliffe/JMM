@@ -37,6 +37,10 @@ public class Mastermind
                 player2 = "Computer";
                 break;
         }
+        if (gameType < 3)
+        {
+            tui.displayInfo();
+        }
         Board board = new Board(width, code);
         Game game = new Game(tui, board, player2, gameType);
         game.play();

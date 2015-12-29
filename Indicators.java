@@ -8,7 +8,8 @@ public class Indicators
     {
 
         // Should never be any null arguments 
-        assert(code != null && guess != null);
+        assert(code != null);
+        assert(guess != null);
 
         // If code and guess are not the same length something has gone wrong
         assert(code.size() == guess.size());

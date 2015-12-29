@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface UserInterface {
     void displayWelcome();
+    void displayInfo();
     int getNumPegs();
     List<Colour> getGuessOrCode(String prompt, int width);
     void displayCode(List<Colour> code);

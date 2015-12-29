@@ -23,15 +23,12 @@ public class TextUserInterface implements UserInterface
 
     public void displayWelcome()
     {
-        for (int i = 0; i < 12; i++)
+        for (int i = 0; i < 100; i++)
             System.out.println();
         displayBanner();
         for (int i = 0; i < 4; i++)
             System.out.println();
             System.out.println("Welcome to Mastermind.\n");
-            System.out.println("When choosing a colour, only enter the first " +
-                    "letter of the colour. For example, R for Red, \n" + 
-                    "B for Blue, O for Orange etc.\n");
     }
 
     private void displayBanner()
@@ -141,7 +138,7 @@ public class TextUserInterface implements UserInterface
 
     public int getGameType()
     {
-        System.out.println("\nSelect the type of game you wish to play.");
+        System.out.println("\nPlease choose the type of game you wish to play:");
         System.out.println();
         System.out.println("\t1. Human vs Human");
         System.out.println("\t2. Human vs Computer");
@@ -159,6 +156,16 @@ public class TextUserInterface implements UserInterface
                 validInput = true;
         }
         return gameType;
+    }
+
+    public void displayInfo()
+    {
+        System.out.println("\nThe available colours are: Blue, Red, Purple, " +
+                            "Orange, Green, and Yellow");
+        System.out.println("\nWhen choosing a colour, only enter the first " +
+                "letter of the colour; ");
+        System.out.println("for example, B for Blue, O for Orange, R for Red etc");
+        console.readLine("\nPress any key to continue.");
     }
 
     public int getNumPegs()

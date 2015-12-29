@@ -18,12 +18,13 @@ class CodeGenerator
         assert(width <= Constants.MAX_CODE_LENGTH);
         this.width = width;
 
-        this.coloursToTry = getSingleColourCode(Colour.O); 
+        this.coloursToTry = new ArrayList<>();
         this.guessedCodes = new ArrayList<>();      // Codes tried in previous guesses
-        this.definateColours = new ArrayList<>();   // Codes tried in previous guesses
+        this.definateColours = new ArrayList<>();
+        this.lastGuess = new ArrayList<>();
 
         // Maintain a list of the colours we know not to use.
-        this.eliminatedColours = new ArrayList<>();  
+        this.eliminatedColours = new ArrayList<>();
 
         // We never want to generate a code with these 
         // values as they are not valid and only used
@@ -95,46 +96,102 @@ class CodeGenerator
 
     public List<Colour> generateCode()
     {
-        System.out.println("coloursToTry: " + this.coloursToTry);
+        System.out.println("guessed code size: " + this.guessedCodes.size());
+        System.out.println("definateColours: " + this.definateColours);
         System.out.println("eliminatedColours: " + this.eliminatedColours);
 
-        List<Colour> localColoursToTry = new ArrayList<Colour>(coloursToTry);
-        List<Colour> code = new ArrayList<>();
 
-        Random rnd = new Random();
-        for (int i = 0; i < definateColours.size(); i++)
+        if (this.guessedCodes.size() == 0)
         {
-            code.add(definateColours.get(i));
+            List<Colour> code = getSingleColourCode(Colour.O);
+            this.lastGuess = code;
+            this.guessedCodes.add(this.lastGuess);
+            return code;
         }
 
-        while(localColoursToTry.size() != 0 && code.size() <  this.width)
+        if (this.guessedCodes.size() == 1)
         {
-            Colour colour = Colour.X; // Initialise to stop compiler warnings
+            List<Colour> code = getSingleColourCode(Colour.B);
+            this.lastGuess = code;
+            this.guessedCodes.add(this.lastGuess);
+            return code;
+        }
 
-            int index = rnd.nextInt(localColoursToTry.size());
-            colour = localColoursToTry.remove(index);
-            if (!eliminatedColours.contains(colour))
+        if (this.guessedCodes.size() == 2)
+        {
+            List<Colour> code = getSingleColourCode(Colour.Y);
+            this.lastGuess = code;
+            this.guessedCodes.add(this.lastGuess);
+            return code;
+        }
+
+        if (this.guessedCodes.size() == 3)
+        {
+            List<Colour> code = getSingleColourCode(Colour.G);
+            this.lastGuess = code;
+            this.guessedCodes.add(this.lastGuess);
+            return code;
+        }
+
+        if (this.guessedCodes.size() == 4)
+        {
+            List<Colour> code = getSingleColourCode(Colour.P);
+            this.lastGuess = code;
+            this.guessedCodes.add(this.lastGuess);
+            return code;
+        }
+
+
+        Random rnd = new Random();
+
+        boolean foundNewCode = false;
+        while(!foundNewCode)
+        {
+
+            assert(this.guessedCodes.size() < Constants.MAX_GUESSES);
+
+            List<Colour> code = new ArrayList<>();
+            List<Colour> localColoursToTry = new ArrayList<Colour>(coloursToTry);
+
+            // First we need to add the colours we know are in the code
+            for (int i = 0; i < definateColours.size(); i++)
             {
-                assert(code.size() < this.width);
-                code.add(colour);
+                code.add(definateColours.get(i));
+            }
+
+            // Now we add possibles from the last guess 
+            while(localColoursToTry.size() != 0 && code.size() <  this.width)
+            {
+                Colour colour = Colour.X; // Initialise to stop compiler warnings
+
+                int index = rnd.nextInt(localColoursToTry.size());
+                colour = localColoursToTry.remove(index);
+                if (!eliminatedColours.contains(colour) && !definateColours.contains(colour))
+                {
+                    assert(code.size() < this.width);
+                    code.add(colour);
+                }
+
+            }
+            while (code.size() < width)
+            {
+                Colour c = getRandomColour();
+                code.add(c);
+            }
+            assert(code.size() == width);
+
+            shuffleArrayList(code);
+            if (!guessedCodes.contains(code))
+            {
+                foundNewCode = true;
+                this.lastGuess = code;
             }
 
         }
-        while (code.size() < width)
-        {
-            Colour c = getRandomColour();
-            code.add(c);
-        }
-
-        System.out.println("before shuff: " + code);
-        shuffleArrayList(code);
-        System.out.println("after shuff: " + code);
-        this.lastGuess = code;
-
-        this.guessedCodes.add(code);
+        this.guessedCodes.add(this.lastGuess);
         assert(guessedCodes.size() <= Constants.MAX_GUESSES);
-
-        return code;
+        assert(this.lastGuess.size() == width);
+        return this.lastGuess;
     }
 
     public void processIndicator(List<IndicatorCode> indicator)
@@ -153,6 +210,15 @@ class CodeGenerator
                 if (!eliminatedColours.contains(c))
                     this.eliminatedColours.add(c);
             }
+            return;
+        }
+
+        // Cool, we know all the colours now
+        if (indicator.size() == width)
+        {
+            this.definateColours = new ArrayList<Colour>();
+            for (int i = 0; i < lastGuess.size(); i++)
+                this.definateColours.add(lastGuess.get(i));
             return;
         }
 
